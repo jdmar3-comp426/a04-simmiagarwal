@@ -30,7 +30,7 @@ app.get("/app/", (req, res, next) => {
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
 app.post("/app/new/", (req, res) => {
 	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)").run(req.body.user, md5(req.body.pass));
-	res.json({ "message": stmt.changes + " record created: ID " + stmt.lastInsertRowid + " (201)"}, body);
+	res.json({ "message": stmt.changes + " record created: ID " + stmt.lastInsertRowid + " (201)"});
 	res.status(201);
 })
 
@@ -62,7 +62,7 @@ app.patch("/app/update/user/:id/", (req, res) => {
 // status: 200 (OK), 404 (Not Found)
 app.delete("/app/delete/user/:id/", (req, res) => {
 	const stmt = db.prepare("DELETE FROM userinfo WHERE id = ?").run(req.params.id);
-	res.json({ "message": stmt.changes + " record deleted: ID " + stmt.lastInsertRowid + " (200)"}, body);
+	res.json({ "message": stmt.changes + " record deleted: ID " + stmt.lastInsertRowid + " (200)"});
 	res.status(200);
 })
 
