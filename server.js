@@ -32,7 +32,8 @@ app.get("/app/", (req, res, next) => {
 // 201 (Created), 404 (Not Found), 409 (Conflict Exists)
 app.post("/app/new", (req, res) => {
 	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)").run(req.body.user, md5(req.body.pass));
-	res.status(201).json(stmt.lastInsertRowid);
+	res.json({ "message": stmt.changes + " record createed: ID " + stmt.lastInsertRowid});
+	res.status(201);
 })
 
 // READ a list of all users (HTTP method GET) at endpoint /app/users/
@@ -46,7 +47,8 @@ app.get("/app/users", (req, res) => {
 // status: 200 (OK), 404 (Not Found)
 app.get("/app/users/:id", (req, res) => {
 	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = ?").get(req.params.id);
-	res.status(200).json(stmt);
+	res.json(stmt);
+	res.status(200);
 })
 
 // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
@@ -54,7 +56,8 @@ app.get("/app/users/:id", (req, res) => {
 // status: 200 (OK), 204 (No Content), 404 (Not Found)
 app.patch("/app/update/user/:id", (req, res) => {
 	const stmt = db.prepare("UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ?").run(req.body.user, md5(req.body.pass), req.params.id);
-	res.status(200).json(stmt.changes);
+	res.json({ "message": stmt.changes + " record updated: ID " + stmt.lastInsertRowid});
+	res.status(200);
 })
 
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
@@ -62,7 +65,8 @@ app.patch("/app/update/user/:id", (req, res) => {
 // status: 200 (OK), 404 (Not Found)
 app.delete("/app/delete/user/:id", (req, res) => {
 	const stmt = db.prepare("DELETE FROM userinfo WHERE id = ?").run(req.params.id);
-	res.status(200).json(stmt.changes);
+	res.json({ "message": stmt.changes + " record deleted: ID " + stmt.lastInsertRowid});
+	res.status(200);
 })
 
 // Default response for any other request
