@@ -2,7 +2,7 @@
 
 # a04 Build an API from scratch
 
-In this assignment, we will build, from scratch, an API that talks to a database of users. Eventually, we will use this method (and this exact database) to add authentication to a page that you previously createed in a01. This is all a lot easier than it seems at first.
+In this assignment, we will build, from scratch, an API that talks to a database of users. Eventually, we will use this method (and this exact database) to add authentication to a page that you previously created in a01. This is all a lot easier than it seems at first.
 
 There are a few basic concepts germane to this assignment that you will want to familiarize yourself with:
 
@@ -32,7 +32,7 @@ Finally, we need a database. We are going to use a JS implementation of a sqlite
 
 Now that our dependencies are installed, we should look at our file structure.
 
-You will have only two main files for this assignment, `server.js` which contains the bulk of our code to createe the API and `database.js` which deals with the database. Skeletons of these files have been createed for you. You will fill in the function definitions based on the instructions below.
+You will have only two main files for this assignment, `server.js` which contains the bulk of our code to create the API and `database.js` which deals with the database. Skeletons of these files have been created for you. You will fill in the function definitions based on the instructions below.
 
 > You will notice that the examples below are using a slightly different method for defining functions. This is intentional, because I want you to be able to recognize both. What you will see here is an example of ES6 “arrow” functions. There are pros and cons to using this method, which we will discuss. The major things to be aware of is that they are:
 1. not self-referencing, which means that they cannot be invoked from within themselves; and they are
@@ -86,7 +86,7 @@ This means that your API is up and running! It doesn’t have any endpoints othe
 
 We are using the better-sqlite3 module to both set up our database and also define the way that our new API will interact with the database. Keep the documentation for better-sqlite3 handy. It will be useful to you and necessary.
 
-Your starter code has a database set up already for you. When you run `server.js` after making the edits above, it will load `database.js` and check to see if there is a database named `users.db`. If there is not, then it will createe one and populate it with two users. You should be able to identify in the code provided where this is happening.
+Your starter code has a database set up already for you. When you run `server.js` after making the edits above, it will load `database.js` and check to see if there is a database named `users.db`. If there is not, then it will create one and populate it with two users. You should be able to identify in the code provided where this is happening.
 
 Let’s start with those users and see what else we can do with the database.
 
@@ -128,7 +128,7 @@ SELECT * FROM userinfo
 
 What is happening here?
 
-We are selecting ALL ("*" means ALL) records from a table called “userinfo”. This should return every record held in the table createed by `database.js`.
+We are selecting ALL ("*" means ALL) records from a table called “userinfo”. This should return every record held in the table created by `database.js`.
 
 Where do we put this, though?
 
@@ -163,7 +163,7 @@ Look at the better-sqlite statements class under `all()` and `get()` to find the
 
 ## Create a new record with INSERT
 
-Here is a SQL statement that createes a new record with a username and password.
+Here is a SQL statement that creates a new record with a username and password.
 
 ```
 INSERT INTO userinfo (user, pass) VALUES (?, ?)
@@ -195,7 +195,7 @@ The following table translates verbs from our CRUD conceptualization to SQL stat
 | -- | -- | -- | ------|
 |Create 	|INSERT 	|POST 	|Makes a new record.|
 |Read 	|SELECT 	|GET 	|Retrieves an existing record.|
-|Update (replace) 	|REPLACE 	|PUT 	|Searches for a record and overwrites it. If it doesn’t exist, the record is createed.|
+|Update (replace) 	|REPLACE 	|PUT 	|Searches for a record and overwrites it. If it doesn’t exist, the record is created.|
 |Update (modify) 	|UPDATE 	|PATCH 	|Modifies the information in an existing record.|
 |Delete 	|DELETE 	|DELETE 	|Removes an existing record.|
 
