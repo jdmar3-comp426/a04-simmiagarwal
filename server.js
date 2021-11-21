@@ -1,20 +1,25 @@
 // Define app using express
 var express = require("express")
 var app = express()
+
 // Require database SCRIPT file
+var db = require("./database.js")
 
 // Require md5 MODULE
+var md5 = require("md5")
 
 // Make Express use its own built-in body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // Set server port
+var HTTP_PORT = 5000
 
 // Start server
 app.listen(HTTP_PORT, () => {
     console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
 });
+
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
     res.json({"message":"Your API works! (200)"});
@@ -38,6 +43,6 @@ app.get("/app/users", (req, res) => {
 
 // Default response for any other request
 app.use(function(req, res){
-	res.json({"message":"Endpoint not found. (404)"});
+	res.json({"message":"Your API is working!"});
     res.status(404);
 });
