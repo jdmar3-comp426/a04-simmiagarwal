@@ -31,7 +31,7 @@ app.get("/app/", (req, res, next) => {
 // INSERT INTO userinfo (user, pass) VALUE (?, ?) (use run, and info obj returned)
 // 201 (Created), 404 (Not Found), 409 (Conflict Exists)
 app.post("/app/new", (req, res) => {
-	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUE (?, ?)").run(req.body.user, md5(req.body.pass));
+	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)").run(req.body.user, md5(req.body.pass));
 	res.status(201).json(stmt.lastInsertRowid);
 })
 
@@ -45,7 +45,7 @@ app.get("/app/users", (req, res) => {
 // SELECT * FROM userinfo where id = 2
 // status: 200 (OK), 404 (Not Found)
 app.get("/app/users/:id", (req, res) => {
-	const stmt = db.prepare("SELECT * FROM userinfo where id = ?").get(req.params.id);
+	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = ?").get(req.params.id);
 	res.status(200).json(stmt);
 })
 
@@ -53,7 +53,7 @@ app.get("/app/users/:id", (req, res) => {
 // UPDATE userinfo SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?
 // status: 200 (OK), 204 (No Content), 404 (Not Found)
 app.patch("/app/update/user/:id", (req, res) => {
-	const stmt = db.prepare("UPDATE userinfo SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?").run(req.body.user, md5(req.body.pass), req.params.id);
+	const stmt = db.prepare("UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ?").run(req.body.user, md5(req.body.pass), req.params.id);
 	res.status(200).json(stmt.changes);
 })
 
