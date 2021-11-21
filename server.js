@@ -17,12 +17,12 @@ var HTTP_PORT = 5000
 
 // Start server
 app.listen(HTTP_PORT, () => {
-    console.log("Server running on port %PORT%".replace("%PORT%",HTTP_PORT))
+	console.log("Server running on port %PORT%".replace("%PORT%", HTTP_PORT))
 });
 
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
-    res.json({"message":"Your API works! (200)"});
+	res.json({ "message": "Your API works! (200)" });
 	res.status(200);
 });
 
@@ -31,12 +31,12 @@ app.get("/app/", (req, res, next) => {
 // INSERT INTO userinfo (user, pass) VALUE (?, ?) (use run, and info obj returned)
 // 201 (Created), 404 (Not Found), 409 (Conflict Exists)
 app.post("/app/new", (req, res) => {
-	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUE (?, ?)").run(req.body.user, req.body.pass);
+	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUE (?, ?)").run(req.body.user, md5(req.body.pass));
 	res.status(201).json(stmt.lastInsertRowid);
 })
 
 // READ a list of all users (HTTP method GET) at endpoint /app/users/
-app.get("/app/users", (req, res) => {	
+app.get("/app/users", (req, res) => {
 	const stmt = db.prepare("SELECT * FROM userinfo").all();
 	res.status(200).json(stmt);
 });
@@ -50,15 +50,23 @@ app.get("/app/users/:id", (req, res) => {
 })
 
 // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
-// UPDATE userinfor SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?
+// UPDATE userinfo SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?
 // status: 200 (OK), 204 (No Content), 404 (Not Found)
+app.patch("/app/update/user/:id", (req, res) => {
+	const stmt = db.prepare("UPDATE userinfo SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?").run(req.body.user, md5(req.body.pass), req.params.id);
+	res.status(200).json(stmt.changes);
+})
 
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
 // DELETE FROM userinfo WHERE id = ?
 // status: 200 (OK), 404 (Not Found)
+app.delete("/app/delete/user/:id", (req, res) => {
+	const stmt = db.prepare("DELETE FROM userinfo WHERE id = ?").run(req.params.id);
+	res.status(200).json(stmt.changes);
+})
 
 // Default response for any other request
-app.use(function(req, res){
-	res.json({"message":"Your API is working!"});
-    res.status(404);
+app.use(function (req, res) {
+	res.json({ "message": "Your API is working!" });
+	res.status(404);
 });
