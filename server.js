@@ -28,11 +28,9 @@ app.get("/app/", (req, res, next) => {
 
 // Define other CRUD API endpoints using express.js and better-sqlite3
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
-// INSERT INTO userinfo (user, pass) VALUE (?, ?) (use run, and info obj returned)
-// 201 (Created), 404 (Not Found), 409 (Conflict Exists)
-app.post("/app/new", (req, res) => {
+app.post("/app/new/", (req, res) => {
 	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)").run(req.body.user, md5(req.body.pass));
-	res.json({ "message": stmt.changes + " record createed: ID " + stmt.lastInsertRowid});
+	res.json({ "message": stmt.changes + " record created: ID " + stmt.lastInsertRowid + " (201)"}, body);
 	res.status(201);
 })
 
@@ -43,34 +41,33 @@ app.get("/app/users", (req, res) => {
 });
 
 // READ a single user (HTTP method GET) at endpoint /app/user/:id
-// SELECT * FROM userinfo where id = 2
-// status: 200 (OK), 404 (Not Found)
-app.get("/app/users/:id", (req, res) => {
-	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = ?").get(req.params.id);
-	res.json(stmt);
+app.get("/app/users/:id/", (req, res) => {
+	const stmt = db.prepare("SELECT * FROM userinfo WHERE id = ?");
+	const single_user = stmt.get(req.params.id);
+	res.json(single_user);
 	res.status(200);
 })
 
 // UPDATE a single user (HTTP method PATCH) at endpoint /app/update/user/:id
 // UPDATE userinfo SET user = COALESCE(?, user), pass = CALESCE(?, pass) WHERE id = ?
 // status: 200 (OK), 204 (No Content), 404 (Not Found)
-app.patch("/app/update/user/:id", (req, res) => {
+app.patch("/app/update/user/:id/", (req, res) => {
 	const stmt = db.prepare("UPDATE userinfo SET user = COALESCE(?,user), pass = COALESCE(?,pass) WHERE id = ?").run(req.body.user, md5(req.body.pass), req.params.id);
-	res.json({ "message": stmt.changes + " record updated: ID " + stmt.lastInsertRowid});
+	res.json({ "message": stmt.changes + " record updated: ID " + stmt.lastInsertRowid + " (200)"});
 	res.status(200);
 })
 
 // DELETE a single user (HTTP method DELETE) at endpoint /app/delete/user/:id
 // DELETE FROM userinfo WHERE id = ?
 // status: 200 (OK), 404 (Not Found)
-app.delete("/app/delete/user/:id", (req, res) => {
+app.delete("/app/delete/user/:id/", (req, res) => {
 	const stmt = db.prepare("DELETE FROM userinfo WHERE id = ?").run(req.params.id);
-	res.json({ "message": stmt.changes + " record deleted: ID " + stmt.lastInsertRowid});
+	res.json({ "message": stmt.changes + " record deleted: ID " + stmt.lastInsertRowid + " (200)"}, body);
 	res.status(200);
 })
 
 // Default response for any other request
 app.use(function (req, res) {
-	res.json({ "message": "Your API is working!" });
+	res.json({ "message": "Endpoint not found. (404)" });
 	res.status(404);
 });
